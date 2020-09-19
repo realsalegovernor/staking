@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Tab1 from './Tab1'
 import Tab2 from './Tab2'
 import Web3 from 'web3';
-import Web3Connect from "web3connect";
+import Web3Modal from "web3modal";
 import { STAKE_ADDRESS, STAKE_TOKEN_ADDRESS, DXSTAKEABI, STAKETOKENABI } from '../../config'
 
 
@@ -54,7 +54,30 @@ export default class SectionMain extends Component {
 
   }
 
+  //Connect to web3
+  async connectWeb3(){
+    const providerOptions = {
+      walletconnect: {
+        package: WalletConnectProvider,
+        options: {
+          infuraId: "8043bb2cf99347b1bfadfb233c5325c0",
+        }
+      }
+    }
+    
+    const web3Modal = new Web3Modal({
+      network: "mainnet", // optional
+      cacheProvider: true, // optional
+      providerOptions // required
+    });
+    
+    const provider = await web3Modal.connect();
 
+    const newWeb3 = new Web3(provider);
+    this.setState({ web3: newWeb3 });
+    this.connectAndLoad();
+
+  }
 
   //Disable toast notifications
   disableNotifications(event){
@@ -394,27 +417,10 @@ export default class SectionMain extends Component {
                     </a>
               </div>
               { this.state.loading 
-                ? <Web3Connect.Button
-                    providerOptions={{
-                      walletconnect: {
-                        package: WalletConnectProvider, // required
-                        options: {
-                          infuraId: "a79a4b4a904c4d3ea1f05fb708c42f8a" // required
-                        }
-                      }
-                    }}
-                    onConnect={(provider) => {
-                      const newWeb3 = new Web3(provider); // add provider to web3
-                      this.setState({ web3: newWeb3 });
-                      this.connectAndLoad();
-                      
-                    }}
-                    onClose={() => {
-                      console.log("Web3Connect Modal Closed"); // modal has closed
-                    }}
-                  />
+                ? <button className="btn btn-warning btn-round" onClick={() => this.connectWeb3()}>Connect</button>
+                    
               : <div><img className="img-rounded img-address"src="assets/img/address_icon.png"></img>{" " + this.state.account[0].substring(0, 6) +  "..." + this.state.account[0].substr(this.state.account[0].length - 4)}</div>
-            }
+              }
             </div>
         </nav>
         { this.state.loading 
