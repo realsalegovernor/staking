@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/Staking/static/css/main.d498bfb3.chunk.css",
-    "main.js": "/Staking/static/js/main.43225c7c.chunk.js",
-    "main.js.map": "/Staking/static/js/main.43225c7c.chunk.js.map",
-    "runtime-main.js": "/Staking/static/js/runtime-main.5607139c.js",
-    "runtime-main.js.map": "/Staking/static/js/runtime-main.5607139c.js.map",
-    "static/js/2.3494a940.chunk.js": "/Staking/static/js/2.3494a940.chunk.js",
-    "static/js/2.3494a940.chunk.js.map": "/Staking/static/js/2.3494a940.chunk.js.map",
-    "index.html": "/Staking/index.html",
-    "precache-manifest.e52618a3310a39fceac2a0b04563b6ea.js": "/Staking/precache-manifest.e52618a3310a39fceac2a0b04563b6ea.js",
-    "service-worker.js": "/Staking/service-worker.js",
-    "static/css/main.d498bfb3.chunk.css.map": "/Staking/static/css/main.d498bfb3.chunk.css.map",
-    "static/js/2.3494a940.chunk.js.LICENSE.txt": "/Staking/static/js/2.3494a940.chunk.js.LICENSE.txt"
+    "main.css": "/stakeropsten.dxsale.network/static/css/main.d498bfb3.chunk.css",
+    "main.js": "/stakeropsten.dxsale.network/static/js/main.43225c7c.chunk.js",
+    "main.js.map": "/stakeropsten.dxsale.network/static/js/main.43225c7c.chunk.js.map",
+    "runtime-main.js": "/stakeropsten.dxsale.network/static/js/runtime-main.f53dea58.js",
+    "runtime-main.js.map": "/stakeropsten.dxsale.network/static/js/runtime-main.f53dea58.js.map",
+    "static/js/2.77ef2ae4.chunk.js": "/stakeropsten.dxsale.network/static/js/2.77ef2ae4.chunk.js",
+    "static/js/2.77ef2ae4.chunk.js.map": "/stakeropsten.dxsale.network/static/js/2.77ef2ae4.chunk.js.map",
+    "index.html": "/stakeropsten.dxsale.network/index.html",
+    "precache-manifest.0c064cb93dd1f25bfd2fca125cafd693.js": "/stakeropsten.dxsale.network/precache-manifest.0c064cb93dd1f25bfd2fca125cafd693.js",
+    "service-worker.js": "/stakeropsten.dxsale.network/service-worker.js",
+    "static/css/main.d498bfb3.chunk.css.map": "/stakeropsten.dxsale.network/static/css/main.d498bfb3.chunk.css.map",
+    "static/js/2.77ef2ae4.chunk.js.LICENSE.txt": "/stakeropsten.dxsale.network/static/js/2.77ef2ae4.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.5607139c.js",
-    "static/js/2.3494a940.chunk.js",
+    "static/js/runtime-main.f53dea58.js",
+    "static/js/2.77ef2ae4.chunk.js",
     "static/css/main.d498bfb3.chunk.css",
     "static/js/main.43225c7c.chunk.js"
   ]
