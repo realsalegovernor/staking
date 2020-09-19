@@ -16,7 +16,7 @@
     --gray-dark: #343a40;
     --primary: #50a1ff;
     --secondary: #e9ecf0;
-    --success: #3cd458;
+    --success: #36a34a;
     --info: #926dde;
     --warning: #ffba00;
     --danger: #ff4954;
@@ -2563,7 +2563,7 @@ fieldset:disabled a.btn {
 }
 
 .btn-primary:hover {
-    color: #fff;
+    color: #000;
     background-color: #3c96ff;
     border-color: #3c96ff;
     box-shadow: 0 1px 10px rgba(80, 161, 255, 0.4)
@@ -2591,15 +2591,15 @@ fieldset:disabled a.btn {
 }
 
 .btn-secondary {
-    color: #757575;
-    background-color: #e9ecf0;
-    border-color: #e9ecf0
+    color: #fff;
+    background-color: #9671F8;
+    border-color: #9671F8
 }
 
 .btn-secondary:hover {
-    color: #757575;
-    background-color: #dde2e8;
-    border-color: #dde2e8;
+    color: #000;
+    background-color: #9671F8;
+    border-color: #9671F8;
     box-shadow: 0 1px 10px rgba(233, 236, 240, 0.4)
 }
 
@@ -2694,12 +2694,12 @@ fieldset:disabled a.btn {
 
 .btn-warning {
     color: #fff;
-    background-color: #ffba00;
-    border-color: #ffba00
+    background-color: #A933ff;
+    border-color: #A933ff
 }
 
 .btn-warning:hover {
-    color: #fff;
+    color: #;
     background-color: #ebab00;
     border-color: #ebab00;
     box-shadow: 0 1px 10px rgba(255, 186, 0, 0.4)
@@ -2733,7 +2733,7 @@ fieldset:disabled a.btn {
 }
 
 .btn-danger:hover {
-    color: #fff;
+    color: #000;
     background-color: #ff3541;
     border-color: #ff3541;
     box-shadow: 0 1px 10px rgba(255, 73, 84, 0.4)
@@ -2761,15 +2761,15 @@ fieldset:disabled a.btn {
 }
 
 .btn-light {
-    color: #757575;
+    color: #fff;
     background-color: #f8f9fa;
     border-color: #f8f9fa
 }
 
 .btn-light:hover {
-    color: #757575;
-    background-color: #eceff2;
-    border-color: #eceff2;
+    color: #fff;
+    background-color: #50a1ff;
+    border-color: #50a1ff;
     box-shadow: 0 1px 10px rgba(248, 249, 250, 0.4)
 }
 
@@ -2781,7 +2781,7 @@ fieldset:disabled a.btn {
 
 .btn-light.disabled,
 .btn-light:disabled {
-    background-color: #f8f9fa;
+    background-color: #318be6;
     border-color: #f8f9fa
 }
 
@@ -2829,7 +2829,7 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-    color: #50a1ff;
+    color: #000;
     background-color: transparent;
     background-image: none;
     border-color: #50a1ff
@@ -2899,7 +2899,7 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-success {
-    color: #3cd458;
+    color: #000;
     background-color: transparent;
     background-image: none;
     border-color: #3cd458
@@ -2969,7 +2969,7 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-warning {
-    color: #ffba00;
+    color: #000;
     background-color: transparent;
     background-image: none;
     border-color: #ffba00
@@ -21583,6 +21583,15 @@ hr {
 img {
     max-width: 100%;
     height: auto
+}
+
+.img-rounded {
+    border-radius: 25%;
+}
+
+.img-address {
+    height: 18px;
+    width: 18px;
 }
 
 .img-thumbnail {

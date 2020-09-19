@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 export default class Navbar extends Component {
-
   render() {
     return (
     <nav class="navbar navbar-expand-lg navbar-dark navbar-stick-dark" data-navbar="static">
@@ -14,10 +13,8 @@ export default class Navbar extends Component {
                 <img class="logo-light" src="assets/img  /logo-light.png" alt="logo"></img>
                 </a>
           </div>
-                <script src="../../../public/assets/js/DxStake" type="text/javascript"></script>
-                <a class="btn btn-xs btn-round btn-success" onClick={this.test}>Connect to Wallet</a>
+                <a class="btn btn-xs btn-round btn-success" href="#">Connect to Wallet</a>
         </div>
-        
     </nav>
     );
   }

@@ -1,8 +1,8 @@
-const stake_address = "0xc3bd864e5e6aa40cf2b41f728d86dd11d5e74e0d";
-const sale_token_address = "0xF063fE1aB7a291c5d06a86e14730b00BF24cB589";
-const stake_token_address = "0x34330f42c315e177338c3c9dc5553518a1ad633e";
+export const STAKE_ADDRESS = "0x41C31724b21FbDa84D265b7F1321822399785260";
+export const SALE_TOKEN_ADDRESS = "0xF063fE1aB7a291c5d06a86e14730b00BF24cB589";
+export const STAKE_TOKEN_ADDRESS = "0x34330f42c315e177338c3c9dc5553518a1ad633e";
 
-const dxStakeABI = 
+export const DXSTAKEABI = 
 [
 	{
 		"inputs": [
@@ -454,7 +454,7 @@ const dxStakeABI =
 	}
 ];
 
-const saleTokenABI = 
+export const SALETOKENABI = 
 [
     {
         "constant": true,
@@ -1255,7 +1255,7 @@ const saleTokenABI =
     }
 ];
 
-const stakeTokenABI =
+export const STAKETOKENABI =
 [
     {
         "inputs": [
