@@ -2699,10 +2699,10 @@ fieldset:disabled a.btn {
 }
 
 .btn-warning:hover {
-    color: #;
-    background-color: #ebab00;
-    border-color: #ebab00;
-    box-shadow: 0 1px 10px rgba(255, 186, 0, 0.4)
+    color: #fff;
+    background-color: #9671F8;
+    border-color: #9671F8;
+    box-shadow: 0 1px 10px rgba(167, 208, 236, 0.4)
 }
 
 .btn-warning:focus,
