@@ -5,7 +5,7 @@ import Tab1 from './Tab1'
 import Tab2 from './Tab2'
 import Web3 from 'web3';
 import Web3Modal from "web3modal";
-import { STAKE_ADDRESS, STAKE_TOKEN_ADDRESS, DXSTAKEABI, STAKETOKENABI } from '../../config'
+import { STAKE_ADDRESS, SALE_TOKEN_ADDRESS, DXSTAKEABI, SALETOKENABI } from '../../config'
 
 
 var WalletConnectProvider = require('@walletconnect/web3-provider');
@@ -108,7 +108,7 @@ export default class SectionMain extends Component {
       console.log("My Address: ", this.state.account);
       const stkContract = new this.state.web3.eth.Contract(DXSTAKEABI, STAKE_ADDRESS);
       this.setState({ stakeContract: stkContract });
-      const tknContract = new this.state.web3.eth.Contract(STAKETOKENABI, STAKE_TOKEN_ADDRESS);
+      const tknContract = new this.state.web3.eth.Contract(SALETOKENABI, SALE_TOKEN_ADDRESS);
       this.setState({ tokenContract: tknContract });
       this.setState({ loading: false })
       this.reloadData();
