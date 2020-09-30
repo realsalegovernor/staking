@@ -3,10 +3,13 @@ import Toast from 'light-toast';
 import styled from 'styled-components';
 import Tab1 from './Tab1'
 import Tab2 from './Tab2'
+import DxDrop from './DxDrop'
 import Web3 from 'web3';
 import Web3Modal from "web3modal";
-import { STAKE_ADDRESS, SALE_TOKEN_ADDRESS, DXSTAKEABI, SALETOKENABI } from '../../config'
+import { STAKE_ADDRESS, SALE_TOKEN_ADDRESS, AIRDROP_ADDRESS, DXSTAKEABI, SALETOKENABI, AIRDROPABI } from '../../config'
 
+const CoinGecko = require('coingecko-api');
+const CoinGeckoClient = new CoinGecko();
 
 var WalletConnectProvider = require('@walletconnect/web3-provider');
 
@@ -23,8 +26,11 @@ export default class SectionMain extends Component {
       totalBurned: 0,
       userRewards: 0,
       approvalAmount: 0,
+      salePrice: 0.02,
       stakeContract: null,
       tokenContract: null,
+      airdropEligibility: false,
+      airdropContract: null,
       stakeAmount: 0,
       unstakeAmount: 0,
       web3: null,
@@ -34,6 +40,7 @@ export default class SectionMain extends Component {
       name: "React",
       showTab1: true,
       showTab2: false,
+      showTab3: false,
       showTransaction: false,
       transactionHash: '0x0',
       showError: false,
@@ -50,6 +57,7 @@ export default class SectionMain extends Component {
       reinvestRewards: this.reinvestRewards.bind(this),
       unstakeAll: this.unstakeAll.bind(this),
       approveContract: this.approveContract.bind(this),
+      claimAirdrop: this.claimAirdrop.bind(this)
     };
 
   }
@@ -105,13 +113,17 @@ export default class SectionMain extends Component {
     if (this.state.web3 != null){
       const accounts = await this.state.web3.eth.getAccounts();
       this.setState({ account: accounts });
-      console.log("My Address: ", this.state.account);
       const stkContract = new this.state.web3.eth.Contract(DXSTAKEABI, STAKE_ADDRESS);
       this.setState({ stakeContract: stkContract });
       const tknContract = new this.state.web3.eth.Contract(SALETOKENABI, SALE_TOKEN_ADDRESS);
       this.setState({ tokenContract: tknContract });
+      const airContract =new this.state.web3.eth.Contract(AIRDROPABI, AIRDROP_ADDRESS);
+      this.setState({ airdropContract: airContract });
       this.setState({ loading: false })
       this.reloadData();
+      setInterval(async () => {
+        this.reloadData();
+      }, 30000);
     }
   }
 
@@ -123,7 +135,10 @@ export default class SectionMain extends Component {
     this.getUserStake();
     this.getTotalStake();
     this.getTotalBurned();
-    console.log("Current State: ", this.state)
+    this.getSalePrice();
+    console.log("Airdrop eligibility before function: ", this.state.airdropEligibility);
+    this.getAirdropEligibility();
+    console.log("Airdrop eligibility after function: ", this.state.airdropEligibility);
   }
 
   // Get minimum staking amount
@@ -184,7 +199,6 @@ export default class SectionMain extends Component {
   async getUserStake(){
     if (this.state.web3 !== null && this.state.stakeContract !== null && this.state.account !== ''){
       const amount = await this.state.stakeContract.methods.CHECKSTAKE().call({ from: this.state.account[0] });
-      console.log("Users Staked amount: ", amount)
       if (amount >= 1000000000){
         this.setState({yourSaleStaked: 0});
       }
@@ -292,6 +306,39 @@ export default class SectionMain extends Component {
     }
   };
 
+  // Claim airdrop function
+  async claimAirdrop() {
+    Toast.loading("Claiming Your Airdrop!");
+    if (this.state.web3 !== null && this.state.airdropContract !== null && this.state.account !== ''){
+      this.state.airdropContract.methods.CLAIMAIRDROP().send({ from: this.state.account[0] })
+      .on('transactionHash', (receipt) => {
+        //this.setState({ showTransaction: true });
+        //this.setState({ transactionHash: receipt });
+      })
+      .on('error', (error) => {
+        //this.setState({ transactionError: error.message });
+        //this.setState({ showError: true });
+        Toast.fail('Failed', 1500)
+      })
+      .once('receipt', (receipt) => {
+        console.log(receipt);
+        this.reloadData();
+        Toast.success('Success', 1500)
+      });
+    }
+  };
+
+  async getAirdropEligibility(){
+    if (this.state.web3 !== null && this.state.airdropContract !== null && this.state.account !== ''){
+      const isEligible = await this.state.airdropContract.methods._checkEligibility().call();
+      console.log("Inside eligibility function: ", isEligible)
+      this.setState({ airdropEligibility: isEligible });
+    }
+    else{
+      console.log('Web3 connection issue');
+    }
+  }
+
   // Reinvest rewards function
   async reinvestRewards() {
     Toast.loading("Transaction in Process!");
@@ -372,6 +419,16 @@ export default class SectionMain extends Component {
     }
   }
 
+  //Coingecko api to grab SALE price
+  async getSalePrice(){
+    const priceObject = await CoinGeckoClient.simple.price({
+      ids: 'dxsale-network',
+      vs_currencies: 'usd',
+    })
+    const dxSaleObject = priceObject.data['dxsale-network']
+    this.setState({ salePrice: dxSaleObject.usd })
+  }
+
   // Show tab 1 or 2
   showTab(name) {
     console.log(name);
@@ -380,12 +437,21 @@ export default class SectionMain extends Component {
         if (!this.state.showTab1){
           this.setState({ showTab1: true })
           this.setState({ showTab2: false })
+          this.setState({ showTab3: false })
         }
         break;
       case "showTab2":
         if (!this.state.showTab2){
           this.setState({ showTab1: false })
           this.setState({ showTab2: true })
+          this.setState({ showTab3: false })
+        }
+        break;
+      case "showTab3":
+        if (!this.state.showTab3){
+          this.setState({ showTab1: false })
+          this.setState({ showTab2: false })
+          this.setState({ showTab3: true })
         }
         break;
     }
@@ -394,16 +460,8 @@ export default class SectionMain extends Component {
   //{color: this.state.showTab2 ? "#A933ff" : "#000", borderColor: "#fff", backgroundColor: "#fff",  }
 
   render() {
-    const { showTab1, showTab2 } = this.state;
-    const HoverText = styled.button`
-      color: #fff;
-      :hover {
-        color: #A933ff;
-        backgroundColor: "#fff";
-        cursor: pointer;
-      }
+    const { showTab1, showTab2, showTab3 } = this.state;
 
-    `
     return (
         <> 
           <nav className="navbar navbar-expand-lg navbar-dark navbar-stick-dark" data-navbar="static">
@@ -411,25 +469,22 @@ export default class SectionMain extends Component {
 
               <div className="navbar-left">
                 <button className="navbar-toggler" type="button"></button>
-                    <a className="navbar-brand" href="#">
                     <img className="logo-dark" src="assets/img/logo-dark.png" alt="logo"></img>
-                    <img className="logo-light" src="assets/img  /logo-light.png" alt="logo"></img>
-                    </a>
               </div>
               { this.state.loading 
-                ? <button className="btn btn-warning btn-round" onClick={() => this.connectWeb3()}>Connect</button>
+                ? <button className="btn btn-warning btn-round" onClick={() => this.connectWeb3()} style={{ fontSize: '85%', marginRight: '40px' }}>Connect</button>
                     
-              : <div><img className="img-rounded img-address"src="assets/img/address_icon.png"></img>{" " + this.state.account[0].substring(0, 6) +  "..." + this.state.account[0].substr(this.state.account[0].length - 4)}</div>
+              : <div style={{ fontSize: '85%', marginRight: '40px' }}><img className="img-rounded img-address" src="assets/img/address_icon.png" style={{ marginRight: '3px', marginBottom: '2px' }}></img>{" " + this.state.account[0].substring(0, 6) +  "..." + this.state.account[0].substr(this.state.account[0].length - 4)}</div>
               }
             </div>
         </nav>
         { this.state.loading 
           ? <div id="test" className="text-center"><br/><br/><br/><br/><h1 className="text-center">Connect your wallet to start!</h1></div> 
           : <main className="main-content">
-              <section className="section bg-fixed py-10 overlay opacity-95" style= {{backgroundColor: "#6650B1"}}>
+              <section className="section bg-fixed overlay opacity-95" style= {{backgroundColor: "#4B28AA", paddingTop: '40px', paddingBottom: '200px'}}>
                 <div className="container">
                   <div className="row">
-                    <div className="col-md-8 col-xl-8 mx-auto">
+                    <div className="col-md-8 col-lg-8 col-xl-8 mx-auto">
                         <div className=" shadow-lg section-dialog bg-white text-black text-center">
                             <p><img src="assets/img/dxstake-logo.png" alt="logo"></img></p>
                             <br></br>
@@ -446,12 +501,18 @@ export default class SectionMain extends Component {
                                                 <button className="btn btn-light btn-round" data-toggle="tab" onClick={() => this.showTab("showTab2")} style={{color: this.state.showTab2 ? "#6F0AB4" : "#C9C6C9"}}>Metrics</button>
                                             </div>
                                         </li>
+                                        <li className="nav-item">
+                                            <div id="dxDrop-tab">
+                                                <button className="btn btn-light btn-round" data-toggle="tab" onClick={() => this.showTab("showTab3")} style={{color: this.state.showTab3 ? "#6F0AB4" : "#C9C6C9"}}>Airdrop</button>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                             <div className="tab-content p-4">
                               {showTab1 && <Tab1 {...this.state}/>}
                               {showTab2 && <Tab2 {...this.state}/>}
+                              {showTab3 && <DxDrop {...this.state}/>}
                             </div>
                         </div>
                     </div>

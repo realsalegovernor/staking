@@ -704,9 +704,7 @@ pre code {
 .col-xl,
 .col-xl-auto {
     position: relative;
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px
+    width: 100%
 }
 
 .col {
@@ -2694,14 +2692,14 @@ fieldset:disabled a.btn {
 
 .btn-warning {
     color: #fff;
-    background-color: #A933ff;
-    border-color: #A933ff
+    background-color: #9671F8;
+    border-color: #9671F8
 }
 
 .btn-warning:hover {
     color: #fff;
-    background-color: #9671F8;
-    border-color: #9671F8;
+    background-color: #5433AE;
+    border-color: #5433AE;
     box-shadow: 0 1px 10px rgba(167, 208, 236, 0.4)
 }
 
@@ -28242,8 +28240,8 @@ body:not(.body-scrolled) .topbar.d-flex~.navbar {
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
-    padding-top: 7rem;
-    padding-bottom: 7rem
+    padding-top: 2rem;
+    padding-bottom: 2rem
 }
 
 .section>.container,
@@ -28255,8 +28253,8 @@ body:not(.body-scrolled) .topbar.d-flex~.navbar {
 
 @media (max-width: 991.98px) {
     .section {
-        padding-top: 5rem;
-        padding-bottom: 5rem
+        padding-top: 2rem;
+        padding-bottom: 2rem
     }
 }
 
