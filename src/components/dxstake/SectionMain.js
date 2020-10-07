@@ -78,10 +78,6 @@ export default class SectionMain extends Component {
 
   componentDidMount() {
     this.connectWeb3();
-
-    for(var i = 0; i < 10000; i ++){
-      this.reloadData();
-    }
   }
   //Connect to web3
   async connectWeb3(){
