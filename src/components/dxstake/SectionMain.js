@@ -5,12 +5,11 @@ import Tab2 from './Tab2'
 import DxDrop from './DxDrop'
 import Web3 from 'web3';
 import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 import { STAKE_ADDRESS, SALE_TOKEN_ADDRESS, AIRDROP_ADDRESS, DXSTAKEABI, SALETOKENABI, AIRDROPABI } from '../../config'
 
 const CoinGecko = require('coingecko-api');
 const CoinGeckoClient = new CoinGecko();
-
-var WalletConnectProvider = require('@walletconnect/web3-provider');
 
 const providerOptions = {
   walletconnect: {
@@ -26,6 +25,7 @@ const web3Modal = new Web3Modal({
   cacheProvider: true, // optional
   providerOptions // required
 });
+
 
 export default class SectionMain extends Component {
 
@@ -76,13 +76,51 @@ export default class SectionMain extends Component {
 
   }
 
+  componentDidMount() {
+    this.connectWeb3();
+
+    for(var i = 0; i < 10000; i ++){
+      this.reloadData();
+    }
+  }
   //Connect to web3
   async connectWeb3(){
-    const provider = await web3Modal.connect();
-    const newWeb3 = new Web3(provider);
-    this.setState({ web3: newWeb3 });
+    var newWeb3 = null;
+    if (window.ethereum){
+      newWeb3 = new Web3(window.ethereum);
+      this.setState({ web3: newWeb3 });
+      this.reloadData();
+      window.ethereum.on("accountsChanged", (accounts) => {
+        this.setState({ account: accounts });
+        this.setState({ approved: false });
+        this.reloadData();
+      })
+      console.log("I'm here")
+    }
+    // Legacy dapp browsers...
+    else if (window.web3) {
+      newWeb3 = new Web3(window.web3.currentProvider);
+      this.setState({ web3: newWeb3 });
+      window.web3.currentProvider.on("accountsChanged", (accounts) => {
+        this.setState({ approved: false });
+        this.reloadData();
+      })
+    }
+    // Non-dapp browsers...
+    else {
+      /*
+      const provider = new WalletConnectProvider({
+        infuraId: "8043bb2cf99347b1bfadfb233c5325c0" // Required
+      });
+      await provider.enable();
+      newWeb3 = new Web3(provider);
+      this.setState({ web3: newWeb3 });
+      console.log(newWeb3)
+      */
+      console.log("This is an unsupported browser!");
+      Toast.fail('Unsupported Browser, please use a dApp browser!', 3000);
+    }
     this.connectAndLoad();
-
   }
 
   //Disable toast notifications
@@ -464,7 +502,7 @@ export default class SectionMain extends Component {
 
               <div className="navbar-left">
                 <button className="navbar-toggler" type="button"></button>
-                    <img className="logo-dark" src="assets/img/logo-dark.png" alt="logo"></img>
+                    <a href="https://dxsale.network"><img className="logo-dark" src="assets/img/logo-dark.png" alt="logo"></img></a>
               </div>
               { this.state.loading 
                 ? <button className="btn btn-warning btn-round" onClick={() => this.connectWeb3()} style={{ fontSize: '85%', marginRight: '40px' }}>Connect</button>
