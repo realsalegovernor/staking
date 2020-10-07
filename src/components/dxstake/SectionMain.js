@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Toast from 'light-toast';
-import styled from 'styled-components';
 import Tab1 from './Tab1'
 import Tab2 from './Tab2'
 import DxDrop from './DxDrop'
@@ -12,6 +11,21 @@ const CoinGecko = require('coingecko-api');
 const CoinGeckoClient = new CoinGecko();
 
 var WalletConnectProvider = require('@walletconnect/web3-provider');
+
+const providerOptions = {
+  walletconnect: {
+    package: WalletConnectProvider,
+    options: {
+      infuraId: "8043bb2cf99347b1bfadfb233c5325c0",
+    }
+  }
+}
+
+const web3Modal = new Web3Modal({
+  network: "mainnet", // optional
+  cacheProvider: true, // optional
+  providerOptions // required
+});
 
 export default class SectionMain extends Component {
 
@@ -64,23 +78,7 @@ export default class SectionMain extends Component {
 
   //Connect to web3
   async connectWeb3(){
-    const providerOptions = {
-      walletconnect: {
-        package: WalletConnectProvider,
-        options: {
-          infuraId: "8043bb2cf99347b1bfadfb233c5325c0",
-        }
-      }
-    }
-    
-    const web3Modal = new Web3Modal({
-      network: "mainnet", // optional
-      cacheProvider: true, // optional
-      providerOptions // required
-    });
-    
     const provider = await web3Modal.connect();
-
     const newWeb3 = new Web3(provider);
     this.setState({ web3: newWeb3 });
     this.connectAndLoad();
@@ -123,7 +121,7 @@ export default class SectionMain extends Component {
       this.reloadData();
       setInterval(async () => {
         this.reloadData();
-      }, 30000);
+      }, 5000);
     }
   }
 
@@ -136,9 +134,7 @@ export default class SectionMain extends Component {
     this.getTotalStake();
     this.getTotalBurned();
     this.getSalePrice();
-    console.log("Airdrop eligibility before function: ", this.state.airdropEligibility);
     this.getAirdropEligibility();
-    console.log("Airdrop eligibility after function: ", this.state.airdropEligibility);
   }
 
   // Get minimum staking amount
@@ -323,16 +319,15 @@ export default class SectionMain extends Component {
       .once('receipt', (receipt) => {
         console.log(receipt);
         this.reloadData();
-        Toast.success('Success', 1500)
+        Toast.success('Airdrop Claimed', 1500)
       });
     }
   };
 
   async getAirdropEligibility(){
     if (this.state.web3 !== null && this.state.airdropContract !== null && this.state.account !== ''){
-      const isEligible = await this.state.airdropContract.methods._checkEligibility().call();
-      console.log("Inside eligibility function: ", isEligible)
-      this.setState({ airdropEligibility: isEligible });
+      const amEligible = await this.state.airdropContract.methods._checkEligibility().call({ from: this.state.account[0] });
+      this.setState({ airdropEligibility: amEligible });
     }
     else{
       console.log('Web3 connection issue');

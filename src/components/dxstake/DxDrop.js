@@ -13,10 +13,10 @@ export default class DxDrop extends Component {
                 <br/><div className="row">
                   <div className="col-lg-12 col-md-12 col-sm-12">
                   { this.props.airdropEligibility
-                    ? <button className="btn btn-primary" type="button" onClick={this.props.claimAirdrop} style={{fontSize: '80%', width:"150px"}}>
+                    ? <div>Claim 1000 SALE for HATCH DAO Rug Victims Below<br/><button className="btn btn-primary" type="button" onClick={this.props.claimAirdrop} style={{fontSize: '80%', width:"150px"}}>
                         Claim
-                      </button>
-                    : <div>Sorry you are not eligible for this airdrop.</div>
+                      </button></div>
+                    : <div>Hatch DAO Claim Status:<br/>Sorry you are not eligible for this airdrop or you have already claimed it!</div>
                   }
                   </div>
                 </div>
