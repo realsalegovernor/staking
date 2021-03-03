@@ -45,6 +45,8 @@ export default class SectionMain extends Component {
       tokenContract: null,
       airdropEligibility: false,
       airdropContract: null,
+      userAirdropAmt: 0,
+      totalAirdropAmt: 0,
       stakeAmount: 0,
       unstakeAmount: 0,
       web3: null,
@@ -71,7 +73,7 @@ export default class SectionMain extends Component {
       reinvestRewards: this.reinvestRewards.bind(this),
       unstakeAll: this.unstakeAll.bind(this),
       approveContract: this.approveContract.bind(this),
-      claimAirdrop: this.claimAirdrop.bind(this)
+      claimUserAirdrop: this.claimUserAirdrop.bind(this)
     };
 
   }
@@ -104,15 +106,6 @@ export default class SectionMain extends Component {
     }
     // Non-dapp browsers...
     else {
-      /*
-      const provider = new WalletConnectProvider({
-        infuraId: "8043bb2cf99347b1bfadfb233c5325c0" // Required
-      });
-      await provider.enable();
-      newWeb3 = new Web3(provider);
-      this.setState({ web3: newWeb3 });
-      console.log(newWeb3)
-      */
       console.log("This is an unsupported browser!");
       Toast.fail('Unsupported Browser, please use a dApp browser!', 3000);
     }
@@ -168,7 +161,8 @@ export default class SectionMain extends Component {
     this.getTotalStake();
     this.getTotalBurned();
     this.getSalePrice();
-    this.getAirdropEligibility();
+    this.getUserAirdrop();
+    this.getLifeTimeAirdrop();
   }
 
   // Get minimum staking amount
@@ -263,6 +257,55 @@ export default class SectionMain extends Component {
     }
   }
 
+  // Get user airdrop amount
+  async getUserAirdrop(){
+    if (this.state.web3 !== null && this.state.airdropContract !== null && this.state.account !== ''){
+      const airdropRound = await this.state.airdropContract.methods.airdrop_round(SALE_TOKEN_ADDRESS).call({ from: this.state.account[0] });
+      const amount = await this.state.airdropContract.methods.claimAirdropAllView(SALE_TOKEN_ADDRESS, airdropRound).call({ from: this.state.account[0] });
+      this.setState({userAirdropAmt: Math.ceil(((amount/1000000000000000000)*100)/100)});
+
+      console.log("User airdrop amount is " + amount);
+
+    }
+    else{
+      console.log('Web3 connection issue');
+    }
+  }
+
+  // Get total airdropped
+  async getLifeTimeAirdrop(){
+    if (this.state.web3 !== null && this.state.airdropContract !== null && this.state.account !== ''){
+      const amount = await this.state.airdropContract.methods.totalTokensAirdroped(SALE_TOKEN_ADDRESS).call({ from: this.state.account[0] });
+      this.setState({totalAirdropAmt: Math.ceil(((amount/1000000000000000000)*100)/100)});
+    }
+    else{
+      console.log('Web3 connection issue');
+    }
+  }
+
+  // Claim airdrop
+  async claimUserAirdrop(){
+    Toast.loading("Claiming Airdrop!");
+    const airdropRound = await this.state.airdropContract.methods.airdrop_round(SALE_TOKEN_ADDRESS).call({ from: this.state.account[0] });
+    if (this.state.web3 !== null && this.state.airdropContract !== null && this.state.account !== ''){
+      this.state.airdropContract.methods.claimAirdropAll(SALE_TOKEN_ADDRESS, airdropRound).send({ from: this.state.account[0] })
+      .on('transactionHash', (receipt) => {
+        this.setState({ showTransaction: true });
+        this.setState({ transactionHash: receipt });
+      })
+      .on('error', (error) => {
+        this.setState({ transactionError: error.message });
+        this.setState({ showError: true });
+        Toast.fail('Failed', 1500)
+      })
+      .once('receipt', (receipt) => {
+        console.log(receipt);
+        this.reloadData();
+        Toast.success('Success', 1500)
+      });
+    }
+  }
+
   // Set stake function
   async setStake() {
     Toast.loading("Transaction in Process!");
@@ -335,38 +378,6 @@ export default class SectionMain extends Component {
       });
     }
   };
-
-  // Claim airdrop function
-  async claimAirdrop() {
-    Toast.loading("Claiming Your Airdrop!");
-    if (this.state.web3 !== null && this.state.airdropContract !== null && this.state.account !== ''){
-      this.state.airdropContract.methods.CLAIMAIRDROP().send({ from: this.state.account[0] })
-      .on('transactionHash', (receipt) => {
-        //this.setState({ showTransaction: true });
-        //this.setState({ transactionHash: receipt });
-      })
-      .on('error', (error) => {
-        //this.setState({ transactionError: error.message });
-        //this.setState({ showError: true });
-        Toast.fail('Failed', 1500)
-      })
-      .once('receipt', (receipt) => {
-        console.log(receipt);
-        this.reloadData();
-        Toast.success('Airdrop Claimed', 1500)
-      });
-    }
-  };
-
-  async getAirdropEligibility(){
-    if (this.state.web3 !== null && this.state.airdropContract !== null && this.state.account !== ''){
-      const amEligible = await this.state.airdropContract.methods._checkEligibility().call({ from: this.state.account[0] });
-      this.setState({ airdropEligibility: amEligible });
-    }
-    else{
-      console.log('Web3 connection issue');
-    }
-  }
 
   // Reinvest rewards function
   async reinvestRewards() {
@@ -458,6 +469,8 @@ export default class SectionMain extends Component {
     this.setState({ salePrice: dxSaleObject.usd })
   }
 
+
+  
   // Show tab 1 or 2
   showTab(name) {
     console.log(name);
