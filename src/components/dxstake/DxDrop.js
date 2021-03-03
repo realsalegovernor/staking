@@ -30,7 +30,7 @@ export default class DxDrop extends Component {
             <form className="input-round">
                 <div className="row">
                   <div className="col-lg-12 col-md-12 col-sm-12">
-                      <div><span style={{ color: '#8A61F8' }}>Click the button below to claim your latest SALE airdrop.</span><br/><button className="btn btn-primary" type="button" onClick={this.props.claimUserAirdrop} style={{fontSize: '80%', width:"150px"}}>
+                      <div><span style={{ color: '#8A61F8' }}>Click the button below to claim your latest SALE airdrop.</span><br/><button disabled={this.props.userAirdropAmt <= 0} className="btn btn-primary" type="button" onClick={this.props.claimUserAirdrop} style={{fontSize: '80%', width:"150px"}}>
                         Claim
                       </button></div>
                   </div>

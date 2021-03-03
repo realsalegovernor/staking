@@ -263,9 +263,6 @@ export default class SectionMain extends Component {
       const airdropRound = await this.state.airdropContract.methods.airdrop_round(SALE_TOKEN_ADDRESS).call({ from: this.state.account[0] });
       const amount = await this.state.airdropContract.methods.claimAirdropAllView(SALE_TOKEN_ADDRESS, airdropRound).call({ from: this.state.account[0] });
       this.setState({userAirdropAmt: Math.ceil(((amount/1000000000000000000)*100)/100)});
-
-      console.log("User airdrop amount is " + airdropRound);
-
     }
     else{
       console.log('Web3 connection issue');
