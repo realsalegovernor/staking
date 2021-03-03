@@ -297,6 +297,7 @@ export default class SectionMain extends Component {
       })
       .once('receipt', (receipt) => {
         console.log(receipt);
+        this.setState({userAirdropAmt: 0});
         this.reloadData();
         Toast.success('Success', 1500)
       });
