@@ -45,7 +45,7 @@ export default class Tab2 extends Component {
             <div className="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-12 vertical-center" style={{ backgroundColor: "#f0eaff" }}>
                 <h6 style={{ color: "#000", fontSize: "80%", marginTop: "5px" }}>
                 Effective Circulating Supply
-                <br/><span style={{color: "#1e30ed"}}>{Math.floor((19133486.78 - this.props.totalSaleStaked - this.props.totalBurned)*100)/100}</span>
+                <br/><span style={{color: "#1e30ed"}}>{Math.floor((26633690 - this.props.totalSaleStaked - this.props.totalBurned)*100)/100}</span>
                 </h6>
             </div>
             <div className="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-xs-12">
@@ -54,7 +54,7 @@ export default class Tab2 extends Component {
             <div className="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-12 vertical-center" style={{ backgroundColor: "#f0eaff" }}>
                 <h6 style={{ color: "#000", fontSize: "80%", marginTop: "5px" }}>
                 Effective Market Cap
-                <br/><span style={{color: "#1e30ed"}}>{Math.floor(((19133486.78 - this.props.totalSaleStaked - this.props.totalBurned)*this.props.salePrice)*100)/100}</span>
+                <br/><span style={{color: "#1e30ed"}}>{Math.floor(((26633690 - this.props.totalSaleStaked - this.props.totalBurned)*this.props.salePrice)*100)/100}</span>
                 </h6>
             </div>
           </div>
